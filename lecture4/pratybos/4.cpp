@@ -55,7 +55,7 @@ int main(){
         scoreAverage = 0;
         leastPoints = 0;
     }
-    cout << "Score average: " << scoreAverage << "\nHighest points: " << maxPoints << "\nLowest points: " << leastPoints << "\nFailed student amount: " << failedStudents << "\nStudent passage percentage: " << passedStudentAmount/allStudents*100;
+    cout << "Score average: " << scoreAverage << "\nHighest points: " << maxPoints << "\nLowest points: " << leastPoints << "\nFailed student amount: " << failedStudents << "\nStudent passage percentage: " << (float) passedStudentAmount / allStudents * 100 << "%" <<  endl;
 
     return 0;
 }
