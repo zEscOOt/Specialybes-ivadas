@@ -1,0 +1,4 @@
+#pragma once
+void print_receipt(std::string &customer_name, int qty1, const std::string &name1, const double price1, int qty2, const std::string &name2, const double price2, int qty3, const std::string &name3, const double price3, double subtotal, int discount_percent, double discount_amount, double tax, double tip, double total, int people, double per_person, int payment_method, double cash_given, double change, int notes20, int notes10, int notes5, int coins2, int coins1, int leftover_cents, int &sold1, int &sold2, int &sold3, int &order_count, double &total_revenue, double &biggest_order_total, std::string &biggest_order_customer);
+
+void print_daily_summary(int order_count, const std::string &name1, int sold1, int sold2, const std::string &name2, int sold3, const std::string &name3, double total_revenue, double biggest_order_total, std::string &biggest_order_customer, int &retFlag);
