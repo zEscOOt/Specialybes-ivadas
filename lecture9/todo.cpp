@@ -56,12 +56,13 @@ void mark_task_complete(pair<string, bool> tasks[20], int pos){
 void delete_task(pair<string, bool> tasks[20], int pos)
 {
     if(pos < 0 || pos > 20){
-        cout << "Task out of bounds.";
+        cout << "Task out of bounds." << endl;
         return;
     }
     for(int i = pos; i < 19; i++){
         pair<string, bool> tmp = tasks[i+1];
         tasks[i] = tmp;
+        tasks[i+1] = {"", false};
     }
 }
 
@@ -73,8 +74,10 @@ void find_word(pair<string, bool> tasks[20])
     cin >> word;
     to_lower(word);
     for(int i = 0; i < 20; i++){
-        for (int j = 0; j < tasks[i].first.length() - word.length() - 1; j++){
-            string text = tasks[i].first.substr(j, word.length() - 1);
+        if(tasks[i].first == "") break;
+        int todo_length = tasks[i].first.length();
+        for (int j = 0; j < (todo_length - 1); j++){
+            string text = tasks[i].first.substr(j, word.length());
             if(text == word){
                 cout << tasks[i].first << endl;
                 matches++;
@@ -116,6 +119,12 @@ void delete_completed_tasks(pair<string, bool> tasks[20])
 
 int main(){
     pair<string, bool> tasks[20]; // each pair is initilized to "" and false
+    // --------------------TESTING PORPUOSES-----------------------------
+    // for (int i = 0; i < 20; ++i)
+    // {
+    //     tasks[i] = {to_string(i + 1), false};
+    // }
+    //-------------------------------------------------------------------
     int lenght = 0;
     char choice;
     cout << boolalpha;
@@ -149,7 +158,7 @@ int main(){
             int pos;
             cout << "Enter task number: ";
             cin >> pos;
-            if (pos >= 0 && pos < 20 && tasks[pos].first != "")
+            if (pos > 0 && pos <= 20 && tasks[pos].first != "")
             {
                 mark_task_complete(tasks, pos-1);
             }
@@ -177,7 +186,7 @@ int main(){
         }
 
         case '5':
-            // find_word(tasks); broken
+            find_word(tasks);
             break;
 
         case '6':
