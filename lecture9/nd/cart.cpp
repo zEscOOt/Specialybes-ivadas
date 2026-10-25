@@ -47,16 +47,52 @@ vector<Product> products{
 void print_product_list();
 void cart_print(vector<Cart_Product> cart);
 void cart_add_product(vector<Cart_Product>& cart);
-void cart_remove_product(vector<Cart_Product> cart, int pos);
-void cart_pay(vector<Cart_Product> cart);
-void exit();
+void cart_remove_product(vector<Cart_Product>& cart);
+void cart_pay(vector<Cart_Product>& cart); // According to the task only when this is called should products stock values be updated but I implamented that in cart_add_product();
 
 int main(){
-    vector<Cart_Product> cart;
-    print_product_list();
-    cart_add_product(cart);
-    cart_print(cart);
-    print_product_list();
+    vector<Cart_Product> cart{
+        // testing data
+        // Cart_Product(products[0], 2),
+        // Cart_Product(products[1], 5),
+        // Cart_Product(products[2], 1),
+        // Cart_Product(products[4], 8),
+    };
+    
+    int userInput;
+    cout << "1. Rodyti parduotuve 2. Deti i krepseli 3. Salinti is krepselio \n4. Rodyti krepseli 5. Apmoketi 6. Iseiti " << endl;
+    while (true)
+    {
+        
+        cout << "Pasirinkite (1-6): ";
+        cin >> userInput;
+
+        switch (userInput)
+        {
+            case 1:
+                print_product_list();
+                break;
+            case 2:
+                cart_add_product(cart);
+                break;
+            case 3:
+                cart_remove_product(cart);
+                break;
+            case 4:
+                cart_print(cart);
+                break;
+            case 5:
+                cart_pay(cart);
+                break;
+            case 6:
+            // because product stock is calculated by cart_add_product and cart_remove_product this unintentionally means that the user can steal from the store if there cart has any items in it
+                return 0;
+            default:
+                cout << "Netinkamas pasirinkimas..." << endl << endl;
+                break;
+        }
+    }
+
     return 0;
 }
 
@@ -159,4 +195,43 @@ void cart_add_product(vector<Cart_Product>& cart){
         cart.at(productIndex).amount += pAmount;
     }
     cout << "Preke prideta." << endl << endl;
+}
+
+void cart_remove_product(vector<Cart_Product>& cart){
+    int pos;
+    do
+    {
+        cout << "Kuria preke salinti: ";
+        cin >> pos;
+        pos--;
+        if(pos < 0 || pos > cart.size()-1){
+            cout << "Sitos prekes nera..." << endl;
+        } else break;
+    } while (true);
+    
+    // readd the removed stock
+    Cart_Product item = cart.at(pos);
+    for(size_t i = 0; i < products.size(); i++)
+    {
+        Product& p = products.at(i);
+        if(p.name == item.name){
+            p.stock += item.amount;
+        }
+    }
+    
+    cart.erase(cart.begin() + pos);
+    cout << "Preke isimta. " << endl << endl;
+}
+
+void cart_pay(vector<Cart_Product>& cart){
+    if (cart.size() == 0)
+    {
+        cout << "Cart is empty..." << endl;
+        return;
+    }
+
+    cart_print(cart);
+    cart.clear();
+    cout << "Aciu, kad pirkote!" << endl << endl;
+    exit(0);
 }
