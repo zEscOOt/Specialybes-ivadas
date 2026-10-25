@@ -4,11 +4,14 @@
 
 using namespace std;
 
-void to_lower(string &word){
-    for (char &c : word)
+string to_lower(string word){
+    string str = "";
+    for (char c : word)
     {
         c = (int)tolower(c);
+        str += c;
     }
+    return str;
 }
 
 void add_task(pair<string, bool> tasks[20]){ // This adds the task to the first "empty" position like push_back() on vectors
@@ -45,7 +48,18 @@ void print_task_list(pair<string, bool> tasks[20]){
     }
 }
 
-void mark_task_complete(pair<string, bool> tasks[20], int pos){
+void mark_task_complete(pair<string, bool> tasks[20]){
+
+    int pos;
+    while(true){
+        cout << "Enter task number: ";
+        cin >> pos;
+        pos--;
+        if(pos < 0 || pos > 20){
+            cout << "Invalid task number." << endl;
+        } else break;
+    }
+    
     if(!tasks[pos].second){
         tasks[pos].second = true;
     } else {
@@ -53,12 +67,19 @@ void mark_task_complete(pair<string, bool> tasks[20], int pos){
     }
 }
 
-void delete_task(pair<string, bool> tasks[20], int pos)
+void delete_task(pair<string, bool> tasks[20]) // Pos is [1-20]
 {
-    if(pos < 0 || pos > 20){
-        cout << "Task out of bounds." << endl;
-        return;
+    int pos;
+    while(true){
+        cout << "Enter task number: ";
+        cin >> pos;
+        pos--;
+        if (pos < 0 || pos > 19)
+        {
+            cout << "Task out of bounds." << endl;
+        } else break;
     }
+    
     for(int i = pos; i < 19; i++){
         pair<string, bool> tmp = tasks[i+1];
         tasks[i] = tmp;
@@ -72,7 +93,7 @@ void find_word(pair<string, bool> tasks[20])
     int matches = 0;
     cout << "Word to search for: ";
     cin >> word;
-    to_lower(word);
+    word = to_lower(word);
     for(int i = 0; i < 20; i++){
         if(tasks[i].first == "") break;
         int todo_length = tasks[i].first.length();
@@ -90,7 +111,33 @@ void find_word(pair<string, bool> tasks[20])
     }
 }
 
-void print_task_list_stats(pair<string, bool> tasks[20]){
+void sort_task_list(pair<string, bool> tasks[20])
+{
+    int n = 20;
+    bool swapped;
+
+    for (int i = 0; i < n - 1; i++)
+    {
+        swapped = false;
+        for (int j = 0; j < n - i - 1; j++)
+        {
+            string task1 = to_lower(tasks[j].first);
+            string task2 = to_lower(tasks[j].first);
+            if (task1.at(0) > task2.at(0))
+            {
+                swap(tasks[j], tasks[j+1]);
+                swapped = true;
+            }
+        }
+
+        // If no two elements were swapped, then break
+        if (!swapped)
+            break;
+    }
+}
+
+void print_task_list_stats(pair<string, bool> tasks[20])
+{
     int num_task = 0;
     int completed_tasks = 0;
 
@@ -105,14 +152,14 @@ void print_task_list_stats(pair<string, bool> tasks[20]){
     cout << "Number of tasks: " << num_task << endl;
     cout << "Completed task number: " << completed_tasks << endl;
     cout << "Tasks left: " << num_task - completed_tasks << endl;
-    cout << "Completed task percentage: " << (completed_tasks > 0 ? (100 * (double)completed_tasks/num_task) : 0) << "%" << endl; 
+    cout << "Completed task percentage: " << (completed_tasks > 0 ? (100 * (double)completed_tasks/num_task) : 0) << "%" << endl;
 }
 
 void delete_completed_tasks(pair<string, bool> tasks[20])
 {
     for (size_t i = 0; i < 20; i++)
     {
-        if(tasks[i].second) delete_task(tasks, i);
+        if(tasks[i].second) delete_task(tasks);
     }
     
 }
@@ -154,46 +201,19 @@ int main(){
             break;
 
         case '3':
-        {
-            int pos;
-            cout << "Enter task number: ";
-            cin >> pos;
-            if (pos > 0 && pos <= 20 && tasks[pos].first != "")
-            {
-                mark_task_complete(tasks, pos-1);
-            }
-            else
-            {
-                cout << "Invalid task number." << endl;
-            }
+            mark_task_complete(tasks);
             break;
-        }
 
         case '4':
-        {
-            int pos;
-            cout << "Enter task number: ";
-            cin >> pos;
-            if (pos >= 0 && pos < 20 && tasks[pos].first != "")
-            {
-                delete_task(tasks, pos-1);
-            }
-            else
-            {
-                cout << "Invalid task number." << endl;
-            }
+            delete_task(tasks);
             break;
-        }
 
         case '5':
             find_word(tasks);
             break;
-
         case '6':
-        {
-            // TODO: Impletent
+            sort_task_list(tasks);
             break;
-        }
 
         case '7':
             print_task_list_stats(tasks);
