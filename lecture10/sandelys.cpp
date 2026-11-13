@@ -2,6 +2,8 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -33,16 +35,29 @@ Product *list_find_heaviest(vector<Product> &list);
 void list_print_avg_weight_price(vector<Product> list);
 void list_sort_weight(vector<Product> &list);
 
-vector<Product> list ;
+vector<Product> list;
 
 int main()
 {
+    ifstream data("products.csv");
+    string line;
+    getline(data, line); // this doesnt ignore the 1st line like it should
+    while (getline(data, line)) {
+        stringstream ss(line);
+        string n;
+        double p;
+        int a;
+        double w;
 
-    list.push_back(Product("Flour", 1.25, 10, 2.0));
-    list.push_back(Product("Rice", 2.40, 5, 1.0));
-    list.push_back(Product("Sugar", 1.80, 8, 3.5));
-    list.push_back(Product("Beans", 3.20, 4, 0.75));
-    list.push_back(Product("Oats", 2.10, 6, 1.5));
+        getline(ss, n, ',');
+        getline(ss, p, ',');
+        getline(ss, a, ',');
+        getline(ss, w);
+
+        list.push_back({n, p, a, w});
+    }
+
+    data.close();
 
     const string menu =
         "1. Print products\n"
